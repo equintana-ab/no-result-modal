@@ -90,11 +90,13 @@
         border-radius: 16px 16px 0 0;
         padding: 36px 16px 19px;
         background: linear-gradient(59deg, var(--Green-30, #a8ffe2) 22.94%, var(--Blue-30, #a4deff) 92.11%);
-        animation: slideUpMobile 0.35s ease-out;
+        animation: modalFade 0.5s ease-out;
         gap: 20px;
         align-items: center;
         text-align: center;
         overflow: hidden;
+        max-height: 80vh;
+        overflow-y: auto;
       }
       .sticker {
         position: absolute;
@@ -129,7 +131,7 @@
       }
       .card-title h2 {
         color: #282727;
-        font-size: clamp(16px, 3vw, 20px);
+        font-size: 20px;
         font-style: normal;
         font-weight: 600;
         line-height: 30px;
@@ -221,6 +223,8 @@
           border-radius: 16px;
           max-width: 484px;
           width: 100%;
+          max-height: none;
+          overflow-y: visible;
           animation: modalFade 0.3s ease;
         }
         .sticker-left {
@@ -238,16 +242,6 @@
       @keyframes modalFade {
         from {
           transform: translateY(0);
-          opacity: 0;
-        }
-        to {
-          transform: translateY(0);
-          opacity: 1;
-        }
-      }
-      @keyframes slideMobile {
-        from {
-          transform: translateY(100%);
           opacity: 0;
         }
         to {
