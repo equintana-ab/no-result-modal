@@ -72,33 +72,29 @@
         box-shadow: 0 16px 35px rgba(63, 89, 217, 0.25);
         cursor: pointer;
       }
-      /* In modal */
+      /* Modal */
       #suggest-modal {
         position: fixed;
         inset: 0;
         display: none;
-        align-items: center;
+        align-items: flex-end;
         justify-content: center;
         background: rgba(0, 0, 0, 0.5);
-        /* backdrop-filter: blur(2px);
-        -webkit-backdrop-filter: blur(2px); */
         z-index: 1000;
       }
       .modal-content {
         display: flex;
         flex-direction: column;
         position: relative;
-        padding: 36px 27px 55px;
-        background: lightblue;
-        border-radius: 16px;
+        width: 100%;
+        border-radius: 16px 16px 0 0;
+        padding: 36px 16px 19px;
+        background: linear-gradient(59deg, var(--Green-30, #a8ffe2) 22.94%, var(--Blue-30, #a4deff) 92.11%);
+        animation: slideUpMobile 0.35s ease-out;
+        gap: 20px;
         align-items: center;
         text-align: center;
-        gap: 20px;
-        max-width: 484px;
-        width: 100%;
         overflow: hidden;
-        background: linear-gradient(59deg, var(--Green-30, #a8ffe2) 22.94%, var(--Blue-30, #a4deff) 92.11%);
-        animation: modalFade 0.3s ease;
       }
       .sticker {
         position: absolute;
@@ -106,13 +102,13 @@
         z-index: 0;
       }
       .sticker-left {
-        top: 80px;
-        left: -1px;
+        top: 77px;
+        left: -45px;
         transform: rotate(-2deg);
       }
       .sticker-right {
         top: 85px;
-        right: -2px;
+        right: -45px;
         transform: rotate(-1deg);
       }
       .modal-header {
@@ -133,14 +129,14 @@
       }
       .card-title h2 {
         color: #282727;
-        font-size: 20px;
+        font-size: clamp(16px, 3vw, 20px);
         font-style: normal;
         font-weight: 600;
         line-height: 30px;
       }
       .card-description {
         color: #282727;
-        font-size: 14px;
+        font-size: clamp(14px, 3vw, 16px);
         font-style: normal;
         font-weight: 400;
         line-height: 20px;
@@ -155,7 +151,6 @@
         backdrop-filter: blur(20px);
         padding: 20px;
         width: 100%;
-        max-width: 430px;
         height: auto;
       }
       .form-group {
@@ -208,10 +203,51 @@
         box-shadow: 0 16px 35px rgba(63, 89, 217, 0.25);
         cursor: pointer;
       }
+
+      @media (width > 768px) {
+        /* In modal */
+        #suggest-modal {
+          position: fixed;
+          inset: 0;
+          display: none;
+          align-items: center;
+          justify-content: center;
+          background: rgba(0, 0, 0, 0.5);
+          z-index: 1000;
+          animation: modalFade 0.3s ease;
+        }
+        .modal-content {
+          padding: 36px 27px 55px;
+          border-radius: 16px;
+          max-width: 484px;
+          width: 100%;
+          animation: modalFade 0.3s ease;
+        }
+        .sticker-left {
+          top: 80px;
+          left: -1px;
+          transform: rotate(-2deg);
+        }
+        .sticker-right {
+          top: 85px;
+          right: -2px;
+          transform: rotate(-1deg);
+        }
+      }
       /* KEYFRAMES DITOH */
       @keyframes modalFade {
         from {
-          transform: translateY(20px);
+          transform: translateY(0);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+      @keyframes slideMobile {
+        from {
+          transform: translateY(100%);
           opacity: 0;
         }
         to {
