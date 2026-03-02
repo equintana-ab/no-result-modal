@@ -76,11 +76,13 @@
       #suggest-modal {
         position: fixed;
         inset: 0;
-        display: none;
+        display: flex;
+        visibility: hidden;
         align-items: flex-end;
         justify-content: center;
         background: rgba(0, 0, 0, 0.5);
         z-index: 1000;
+        transition: opacity 0.3s ease-out;
       }
       .modal-content {
         display: flex;
@@ -90,14 +92,37 @@
         border-radius: 16px 16px 0 0;
         padding: 36px 16px 19px;
         background: linear-gradient(59deg, var(--Green-30, #a8ffe2) 22.94%, var(--Blue-30, #a4deff) 92.11%);
-        animation: modalFade 0.5s ease-out;
+        transform: translateY(100%);
+        transition: transform 0.5s ease-out;
+        /* transition:
+          transform 0.3s ease-out,
+          opacity 0.3s ease-out; */
+        /* animation: modalSlideUp 0.3s ease-out; */
+        /* opacity: 1; */
         gap: 20px;
         align-items: center;
         text-align: center;
         overflow: hidden;
-        max-height: 80vh;
+        max-height: 70vh;
         overflow-y: auto;
+        /* transition: transform 0.5s ease-out; */
       }
+      #suggest-modal.show {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      #suggest-modal.show .modal-content {
+        /* animation: modalSlideUp 0.3s ease-out forwards; */
+        transform: translateY(0);
+        /* opacity: 1; */
+      }
+
+      /* Fade out as the modal is dragged */
+      /* #suggest-modal.fade-out .modal-content {
+        opacity: 0.2;
+        transform: translateY(100%); /* Move modal down when fading
+      } */
       .sticker {
         position: absolute;
         pointer-events: none;
@@ -206,7 +231,7 @@
         cursor: pointer;
       }
 
-      @media (width > 768px) {
+      @media (width >= 768px) {
         /* In modal */
         #suggest-modal {
           position: fixed;
@@ -217,6 +242,9 @@
           background: rgba(0, 0, 0, 0.5);
           z-index: 1000;
           animation: modalFade 0.3s ease;
+        }
+        #suggest-modal.show {
+          display: flex;
         }
         .modal-content {
           padding: 36px 27px 55px;
@@ -247,6 +275,14 @@
         to {
           transform: translateY(0);
           opacity: 1;
+        }
+      }
+      @keyframes modalSlideUp {
+        0% {
+          transform: translateY(100%);
+        }
+        100% {
+          transform: translateY(0);
         }
       }
     </style>
@@ -330,24 +366,127 @@
     </main>
   </body>
   <script>
+    // const modal = document.getElementById("suggest-modal");
+    // const openBtn = document.getElementById("suggest-button");
+    // const closeBtn = document.querySelector(".modal-content > svg");
+
+    // //   Open modal
+    // openBtn.addEventListener("click", () => {
+    //   modal.style.display = "flex";
+    //   document.body.style.overflow = "hidden";
+    // });
+
+    // // Close modal (X button)
+    // function closeModal() {
+    //   modal.style.display = "none";
+    //   document.body.style.overflow = "auto";
+    // }
+    // closeBtn.addEventListener("click", closeModal);
+
+    // // Close when clicking outside modal
+    // modal.addEventListener("click", (e) => {
+    //   if (e.target === modal) {
+    //     closeModal();
+    //   }
+    // });
+
+    // ---------------------------
+    // const modal = document.getElementById("suggest-modal");
+    // const openBtn = document.getElementById("suggest-button");
+    // const closeBtn = document.querySelector(".modal-content > svg");
+
+    // // Open modal
+    // openBtn.addEventListener("click", () => {
+    //   modal.classList.add("show");
+    //   document.body.style.overflow = "hidden";
+    // });
+
+    // // Close modal (X button)
+    // function closeModal() {
+    //   modal.classList.remove("show");
+    //   document.body.style.overflow = "auto";
+    // }
+
+    // closeBtn.addEventListener("click", closeModal);
+
+    // // Close when clicking outside modal
+    // modal.addEventListener("click", (e) => {
+    //   if (e.target === modal) {
+    //     closeModal();
+    //   }
+    // });
+
+    // -------------------------
+    //
     const modal = document.getElementById("suggest-modal");
+    const modalContent = document.querySelector(".modal-content");
     const openBtn = document.getElementById("suggest-button");
     const closeBtn = document.querySelector(".modal-content > svg");
 
-    //   Open modal
+    let isDragging = false;
+    let startY = 0;
+    let currentY = 0;
+
+    // Open modal
     openBtn.addEventListener("click", () => {
-      modal.style.display = "flex";
+      modal.classList.add("show");
       document.body.style.overflow = "hidden";
     });
 
     // Close modal (X button)
     function closeModal() {
-      modal.style.display = "none";
+      modal.classList.remove("show");
       document.body.style.overflow = "auto";
+
+      setTimeout(() => {
+        modalContent.style.transform = "";
+        modalContent.style.opacity = "";
+      }, 300);
     }
+
     closeBtn.addEventListener("click", closeModal);
 
-    // Close when clicking outside modal
+    // Handle dragging
+    // Detect mobile screen
+    const isMobile = window.matchMedia("(max-width: 768px)").matches;
+
+    if (isMobile) {
+      modalContent.addEventListener("touchstart", (e) => {
+        isDragging = true;
+        startY = e.touches[0].clientY;
+        modalContent.style.transition = "none";
+      });
+
+      modalContent.addEventListener("touchmove", (e) => {
+        if (!isDragging) return;
+
+        currentY = e.touches[0].clientY;
+        const dragDistance = currentY - startY;
+
+        if (dragDistance > 0) {
+          modalContent.style.transform = `translateY(${dragDistance}px)`;
+
+          // Smooth fade
+          const opacity = 1 - dragDistance / window.innerHeight;
+          modalContent.style.opacity = Math.max(opacity, 0);
+        }
+      });
+
+      modalContent.addEventListener("touchend", () => {
+        if (!isDragging) return;
+
+        isDragging = false;
+
+        modalContent.style.transition = "transform 0.3s ease-out, opacity 0.3s ease-out";
+
+        if (currentY - startY > window.innerHeight / 4) {
+          closeModal();
+        } else {
+          modalContent.style.transform = "translateY(0)";
+          modalContent.style.opacity = 1;
+        }
+      });
+    }
     modal.addEventListener("click", (e) => {
       if (e.target === modal) {
         closeModal();
