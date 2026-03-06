@@ -106,8 +106,8 @@
         align-items: center;
         text-align: center;
         overflow: hidden;
-        max-height: 70vh;
-        /* overflow-y: auto; */
+        max-height: 85vh;
+        overflow-y: auto;
         /* transition: transform 0.5s ease-out; */
       }
       #suggest-modal.show {
@@ -377,22 +377,20 @@
     let isDragging = false;
     let startY = 0;
     let currentY = 0;
-    let currentTranslateY = 0; // tracks current position
 
-    const SNAP_FULL = window.innerHeight * 0.05; // max drag up limit
-
+    // Open modal
     openBtn.addEventListener("click", () => {
-      if (isMobile) {
-        modal.style.opacity = "";
-        modal.style.transition = "";
-        modalContent.style.transform = "";
-        modalContent.style.transition = "";
-        currentTranslateY = 0;
-      }
+      // Reset any leftover inline styles from previous close
+      modal.style.opacity = "";
+      modal.style.transition = "";
+      modalContent.style.transform = "";
+      modalContent.style.transition = "";
+
       modal.classList.add("show");
       document.body.style.overflow = "hidden";
     });
 
+    // Close modal (X button)
     function closeModal(slide = false) {
       if (slide) {
         modalContent.style.transition = "transform 0.4s ease-out";
@@ -408,12 +406,14 @@
           modalContent.style.cssText = "";
           document.body.style.overflow = "auto";
         },
-        slide ? 400 : 0,
+        slide ? 300 : 0,
       );
     }
 
     closeBtn.addEventListener("click", () => closeModal());
 
+    // Handle dragging
+    // Detect mobile screen
     const isMobile = window.matchMedia("(max-width: 768px)").matches;
 
     if (isMobile) {
@@ -428,48 +428,33 @@
 
         currentY = e.touches[0].clientY;
         const dragDistance = currentY - startY;
-        const newTranslate = currentTranslateY + dragDistance;
 
-        // Stop dragging up past the limit
-        if (newTranslate < SNAP_FULL) return;
+        if (dragDistance > 0) {
+          modalContent.style.transform = `translateY(${dragDistance}px)`;
 
-        modalContent.style.transform = `translateY(${newTranslate}px)`;
-
-        // Only fade when dragging down
-        if (newTranslate > 0) {
-          const opacity = 1 - newTranslate / window.innerHeight;
+          // Smooth fade
+          const opacity = 1 - dragDistance / window.innerHeight;
           modal.style.opacity = Math.max(opacity, 0);
-        } else {
-          modal.style.opacity = "1";
         }
       });
 
       modalContent.addEventListener("touchend", () => {
         if (!isDragging) return;
         isDragging = false;
+        modalContent.style.transition = "transform 0.5s ease-out";
 
-        modalContent.style.transition = "transform 0.4s ease-out";
-        const dragDistance = currentY - startY;
-
-        if (dragDistance > window.innerHeight / 4) {
-          // Dragged down far enough → close
-          closeModal(true);
-        } else if (dragDistance < -80) {
-          // Dragged up enough → snap to full
-          currentTranslateY = SNAP_FULL;
-          modalContent.style.transform = `translateY(${SNAP_FULL}px)`;
-          modal.style.opacity = "1";
+        if (currentY - startY > window.innerHeight / 4) {
+          closeModal();
         } else {
-          // Snap back to original position
-          currentTranslateY = 0;
-          modalContent.style.transform = `translateY(${currentTranslateY}px)`;
+          modalContent.style.transform = "translateY(0)";
           modal.style.opacity = "1";
         }
       });
     }
-
     modal.addEventListener("click", (e) => {
-      if (e.target === modal) closeModal();
+      if (e.target === modal) {
+        closeModal();
+      }
     });
   </script>
 </html>
