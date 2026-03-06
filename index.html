@@ -82,7 +82,10 @@
         justify-content: center;
         background: rgba(0, 0, 0, 0.5);
         z-index: 1000;
-        transition: opacity 0.3s ease-out;
+        opacity: 0;
+        transition:
+          opacity 0.3s ease-out,
+          visibility 0.3s ease-out;
       }
       .modal-content {
         display: flex;
@@ -366,58 +369,6 @@
     </main>
   </body>
   <script>
-    // const modal = document.getElementById("suggest-modal");
-    // const openBtn = document.getElementById("suggest-button");
-    // const closeBtn = document.querySelector(".modal-content > svg");
-
-    // //   Open modal
-    // openBtn.addEventListener("click", () => {
-    //   modal.style.display = "flex";
-    //   document.body.style.overflow = "hidden";
-    // });
-
-    // // Close modal (X button)
-    // function closeModal() {
-    //   modal.style.display = "none";
-    //   document.body.style.overflow = "auto";
-    // }
-    // closeBtn.addEventListener("click", closeModal);
-
-    // // Close when clicking outside modal
-    // modal.addEventListener("click", (e) => {
-    //   if (e.target === modal) {
-    //     closeModal();
-    //   }
-    // });
-
-    // ---------------------------
-    // const modal = document.getElementById("suggest-modal");
-    // const openBtn = document.getElementById("suggest-button");
-    // const closeBtn = document.querySelector(".modal-content > svg");
-
-    // // Open modal
-    // openBtn.addEventListener("click", () => {
-    //   modal.classList.add("show");
-    //   document.body.style.overflow = "hidden";
-    // });
-
-    // // Close modal (X button)
-    // function closeModal() {
-    //   modal.classList.remove("show");
-    //   document.body.style.overflow = "auto";
-    // }
-
-    // closeBtn.addEventListener("click", closeModal);
-
-    // // Close when clicking outside modal
-    // modal.addEventListener("click", (e) => {
-    //   if (e.target === modal) {
-    //     closeModal();
-    //   }
-    // });
-
-    // -------------------------
-    //
     const modal = document.getElementById("suggest-modal");
     const modalContent = document.querySelector(".modal-content");
     const openBtn = document.getElementById("suggest-button");
@@ -494,3 +445,56 @@
     });
   </script>
 </html>
+<!-- 
+    const modal = document.getElementById("suggest-modal");
+    const openBtn = document.getElementById("suggest-button");
+    const closeBtn = document.querySelector(".modal-content > svg");
+
+    //   Open modal
+    openBtn.addEventListener("click", () => {
+      modal.style.display = "flex";
+      document.body.style.overflow = "hidden";
+    });
+
+    // Close modal (X button)
+    function closeModal() {
+      modal.style.display = "none";
+      document.body.style.overflow = "auto";
+    }
+    closeBtn.addEventListener("click", closeModal);
+
+    // Close when clicking outside modal
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+
+    ---------------------------
+    const modal = document.getElementById("suggest-modal");
+    const openBtn = document.getElementById("suggest-button");
+    const closeBtn = document.querySelector(".modal-content > svg");
+
+    // Open modal
+    openBtn.addEventListener("click", () => {
+      modal.classList.add("show");
+      document.body.style.overflow = "hidden";
+    });
+
+    // Close modal (X button)
+    function closeModal() {
+      modal.classList.remove("show");
+      document.body.style.overflow = "auto";
+    }
+
+    closeBtn.addEventListener("click", closeModal);
+
+    // Close when clicking outside modal
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+
+    -------------------------
+     -->
