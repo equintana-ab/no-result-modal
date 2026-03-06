@@ -434,7 +434,7 @@
 
           // Smooth fade
           const opacity = 1 - dragDistance / window.innerHeight;
-          modalContent.style.opacity = Math.max(opacity, 0);
+          modal.style.opacity = Math.max(opacity, 0);
         }
       });
 
@@ -447,7 +447,7 @@
           closeModal();
         } else {
           modalContent.style.transform = "translateY(0)";
-          modalContent.style.opacity = "1";
+          modal.style.opacity = "1";
         }
       });
     }
