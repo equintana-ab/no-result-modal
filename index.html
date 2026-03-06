@@ -421,7 +421,6 @@
         isDragging = true;
         startY = e.touches[0].clientY;
         modalContent.style.transition = "none";
-        modalContent.style.overflowY = "hidden";
       });
 
       modalContent.addEventListener("touchmove", (e) => {
@@ -443,7 +442,6 @@
         if (!isDragging) return;
         isDragging = false;
         modalContent.style.transition = "transform 0.5s ease-out";
-        modalContent.style.overflowY = "auto";
 
         if (currentY - startY > window.innerHeight / 4) {
           closeModal();
