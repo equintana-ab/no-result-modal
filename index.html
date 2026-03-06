@@ -84,8 +84,8 @@
         z-index: 1000;
         opacity: 0;
         transition:
-          opacity 0.3s ease-out,
-          visibility 0.3s ease-out;
+          opacity 0.4s ease-out,
+          visibility 0.4s ease-out;
       }
       .modal-content {
         display: flex;
@@ -96,7 +96,7 @@
         padding: 36px 16px 19px;
         background: linear-gradient(59deg, var(--Green-30, #a8ffe2) 22.94%, var(--Blue-30, #a4deff) 92.11%);
         transform: translateY(100%);
-        transition: transform 0.5s ease-out;
+        transition: transform 0.4s ease-out;
         /* transition:
           transform 0.3s ease-out,
           opacity 0.3s ease-out; */
@@ -380,22 +380,37 @@
 
     // Open modal
     openBtn.addEventListener("click", () => {
+      // Reset any leftover inline styles from previous close
+      modal.style.opacity = "";
+      modal.style.transition = "";
+      modalContent.style.transform = "";
+      modalContent.style.transition = "";
+
       modal.classList.add("show");
       document.body.style.overflow = "hidden";
     });
 
     // Close modal (X button)
-    function closeModal() {
-      modal.classList.remove("show");
-      document.body.style.overflow = "auto";
+    function closeModal(slide = false) {
+      if (slide) {
+        modalContent.style.transition = "transform 0.4s ease-out";
+        modalContent.style.transform = "translateY(100%)";
+        modal.style.transition = "opacity 0.4s ease-out";
+        modal.style.opacity = "0";
+      }
 
-      setTimeout(() => {
-        modalContent.style.transform = "";
-        modalContent.style.opacity = "";
-      }, 300);
+      setTimeout(
+        () => {
+          modal.classList.remove("show");
+          modal.style.cssText = "";
+          modalContent.style.cssText = "";
+          document.body.style.overflow = "auto";
+        },
+        slide ? 300 : 0,
+      );
     }
 
-    closeBtn.addEventListener("click", closeModal);
+    closeBtn.addEventListener("click", () => closeModal());
 
     // Handle dragging
     // Detect mobile screen
@@ -425,16 +440,14 @@
 
       modalContent.addEventListener("touchend", () => {
         if (!isDragging) return;
-
         isDragging = false;
-
-        modalContent.style.transition = "transform 0.3s ease-out, opacity 0.3s ease-out";
+        modalContent.style.transition = "transform 0.5s ease-out";
 
         if (currentY - startY > window.innerHeight / 4) {
           closeModal();
         } else {
           modalContent.style.transform = "translateY(0)";
-          modalContent.style.opacity = 1;
+          modalContent.style.opacity = "1";
         }
       });
     }
