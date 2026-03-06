@@ -97,18 +97,12 @@
         background: linear-gradient(59deg, var(--Green-30, #a8ffe2) 22.94%, var(--Blue-30, #a4deff) 92.11%);
         transform: translateY(100%);
         transition: transform 0.4s ease-out;
-        /* transition:
-          transform 0.3s ease-out,
-          opacity 0.3s ease-out; */
-        /* animation: modalSlideUp 0.3s ease-out; */
-        /* opacity: 1; */
         gap: 20px;
         align-items: center;
         text-align: center;
         overflow: hidden;
         max-height: 70vh;
         overflow-y: auto;
-        /* transition: transform 0.5s ease-out; */
       }
       #suggest-modal.show {
         opacity: 1;
@@ -116,16 +110,9 @@
       }
 
       #suggest-modal.show .modal-content {
-        /* animation: modalSlideUp 0.3s ease-out forwards; */
         transform: translateY(0);
-        /* opacity: 1; */
       }
 
-      /* Fade out as the modal is dragged */
-      /* #suggest-modal.fade-out .modal-content {
-        opacity: 0.2;
-        transform: translateY(100%); /* Move modal down when fading
-      } */
       .sticker {
         position: absolute;
         pointer-events: none;
@@ -280,14 +267,6 @@
           opacity: 1;
         }
       }
-      /* @keyframes modalSlideUp {
-        0% {
-          transform: translateY(100%);
-        }
-        100% {
-          transform: translateY(0);
-        }
-      } */
     </style>
   </head>
   <body>
@@ -452,7 +431,7 @@
       });
     }
     modal.addEventListener("click", (e) => {
-      if (e.target === modal) {
+      if (!modalContent.contains(e.target)) {
         closeModal();
       }
     });
