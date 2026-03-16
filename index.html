@@ -127,6 +127,11 @@
         right: -45px;
         transform: rotate(-1deg);
       }
+      .modal-header,
+      form {
+        position: relative;
+        z-index: 1;
+      }
       .modal-header {
         display: flex;
         flex-direction: column;
@@ -318,7 +323,7 @@
               ABZ what it is.
             </p>
           </div>
-          <form action="/" method="post">
+          <form action="/" method="post" id="form-id">
             <div class="form-group">
               <label for="name">What do we call you?</label>
               <input type="text" id="name" name="name" placeholder="Name" class="form-control" required />
@@ -408,20 +413,23 @@
         modalContent.style.transition = "none";
       });
 
-      modalContent.addEventListener("touchmove", (e) => {
-        if (!isDragging) return;
+      modalContent.addEventListener(
+        "touchmove",
+        (e) => {
+          if (!isDragging) return;
 
-        currentY = e.touches[0].clientY;
-        const dragDistance = currentY - startY;
+          currentY = e.touches[0].clientY;
+          const dragDistance = currentY - startY;
 
-        if (dragDistance > 0) {
-          modalContent.style.transform = `translateY(${dragDistance}px)`;
-
-          // Smooth fade
-          const opacity = 1 - dragDistance / window.innerHeight;
-          modal.style.opacity = Math.max(opacity, 0);
-        }
-      });
+          if (dragDistance > 0) {
+            e.preventDefault(); // <--- prevent page scroll
+            const resistance = Math.min(dragDistance, 300); // max drag
+            modalContent.style.transform = `translateY(${resistance}px)`;
+            modal.style.opacity = Math.max(1 - resistance / 300, 0.7);
+          }
+        },
+        { passive: false }, // must be false for e.preventDefault() to work on mobile
+      );
 
       modalContent.addEventListener("touchend", () => {
         if (!isDragging) return;
